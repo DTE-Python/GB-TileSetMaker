@@ -16,5 +16,6 @@ Short for "delete txt." A .txt file is always generated, but it isn't needed aft
 Short for "Map." Use this option to generate a header file with the '.h' extention.
 
 <h2>Notes:</h2>
-This works best with small images, because big ones are impractical for the Gameboy.<br>
+<b>Unless you specify an output folder you will have to create the "/output_default" folder.</b><br>
+<br>This tool works best with small images, because big ones are impractical for the Gameboy.<br>
 I'm not too savvy with GitHub or really Python in general, but this tool works for me, so I'm happy.
