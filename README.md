@@ -10,10 +10,6 @@ A quick program to turn a given image into a hex tileset for GBDK usage.
 Short for "out." The name of the file(s) to output to. You don't need to specify the extention. By default this is "NEW_SET"<br>
 <b>-mF [<i>FILEPATH...]</i></b><br>
 Short for "move folder." You can set the folder of output to <i>FILEPATH</i>. By default this is "/output_default"<br>
-<b>-dt</b><br>
-Short for "delete txt." A .txt file is always generated, but it isn't needed after the program finishes. Use this option to remove it.<br>
-<b>-M</b><br>
-Short for "Map." Use this option to generate a header file with the '.h' extention.
 
 <h2>Notes:</h2>
 <b>Unless you specify an output folder you will have to create the "/output_default" folder.</b><br>
