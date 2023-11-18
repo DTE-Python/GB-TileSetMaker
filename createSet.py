@@ -22,7 +22,7 @@ parser.add_argument('-mF', action='store', dest="output_filepath",
 
 parser.add_argument('-DG', action='store', dest='dark_grey',
                     default=85,
-                    help='Set the value to round Dark Grey to, between 0 and 255. Defaults to 85. GB value is ')
+                    help='Set the value to round Dark Grey to, between 0 and 255. Defaults to 85.')
 
 parser.add_argument('-LG', action='store', dest='light_grey',
                     default=170,
