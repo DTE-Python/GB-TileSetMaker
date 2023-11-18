@@ -1,14 +1,9 @@
 from PIL import Image
-from typing import Final
 import bitstring
 import numpy as np
 import argparse
 import os
 
-BLACK: Final[int] = 0
-D_GREY: Final[int] = 85
-L_GREY: Final[int] = 170
-WHITE: Final[int] = 255
 
 full_path = os.path.dirname(__file__)
 
@@ -25,21 +20,38 @@ parser.add_argument('-mF', action='store', dest="output_filepath",
                      default=full_path+'/output_default',
                      help='Set a destination folder with a filepath.')
 
+parser.add_argument('-DG', action='store', dest='dark_grey',
+                    default=85,
+                    help='Set the value to round Dark Grey to, between 0 and 255. Defaults to 85. GB value is ')
+
+parser.add_argument('-LG', action='store', dest='light_grey',
+                    default=170,
+                    help='Set the value to round Light Grey to, between 0 and 255. Defaults to 170.')
+
 command_args = parser.parse_args()
 
 real_filepath = command_args.output_filepath
 Image_Chosen = command_args.input_file
 output_name = command_args.output_name
 
+D_GREY = command_args.dark_grey
+L_GREY = command_args.light_grey
+BLACK = 0
+WHITE = 255
 
 def main():
     base_image_alpha = np.array(Image.open(Image_Chosen))
 
-    # make transparencies white
-    base_image_alpha[base_image_alpha[...,-1]==0] = [255,255,255,0]
+    original_image_copy = base_image_alpha
 
-    # turn back into PIL image and save
-    Image.fromarray(base_image_alpha).save(Image_Chosen)
+    print(base_image_alpha.ndim, base_image_alpha.shape)
+
+    # make transparencies white if alpha exists
+    if (base_image_alpha.ndim ==3):
+        base_image_alpha[base_image_alpha[...,-1]==0] = [255,255,255,0]
+
+        # turn back into PIL image and save
+        Image.fromarray(base_image_alpha).save(Image_Chosen)
 
     # open the file
     converted_image_alpha = Image.open(Image_Chosen, 'r')
@@ -59,6 +71,8 @@ def main():
     greyIm_PixHexVals, tileset_string = image_to_tileset(greyscale_image)
 
     tileset_to_c(greyIm_PixHexVals, tileset_string)
+    
+    Image.fromarray(original_image_copy).save(Image_Chosen)
 
 def image_to_tileset(image):
 
@@ -119,16 +133,18 @@ def image_to_tileset(image):
     return greyscale_image_pix_hex_values, string_containing_tileset
 
 def Round_Greys(input):
-    range = 42.5
+    
+    range_White_LightGrey = (WHITE - L_GREY)/2
+    range_LightGrey_DarkGrey = (L_GREY - D_GREY)/2
+    range_DarkGrey_Black = (D_GREY)/2
 
-    #simple rounding
-    if (input - range <= BLACK):
+    if (input - range_DarkGrey_Black <= BLACK):
         return BLACK
-    elif (input + range >= WHITE):
+    elif (input + range_White_LightGrey >= WHITE):
         return WHITE
-    elif (input <= (D_GREY + range) and input >= (D_GREY - range)):
+    elif (input <= (D_GREY + range_LightGrey_DarkGrey) and input >= (D_GREY - range_DarkGrey_Black)):
         return D_GREY
-    elif (input <= (L_GREY + range) and input >= (L_GREY - range)):
+    elif (input <= (L_GREY + range_White_LightGrey) and input >= (L_GREY - range_LightGrey_DarkGrey)):
         return L_GREY
 
 def Convert_Colors_To_2_Byte_Format(gi_pv):
@@ -271,4 +287,7 @@ def tileset_to_c(greyimage_pixHexValues, tileset_string):
     c_file = open(real_filepath+'/'+file_name+'.c', "w")
     c_file.write(c_file_format(greyimage_pixHexValues, tileset_string, file_name))
 
-main()
+if (L_GREY < D_GREY or L_GREY > WHITE or D_GREY < BLACK or L_GREY < BLACK or D_GREY > WHITE):
+    print("Error: Invalid Greys")
+else:
+    main()
