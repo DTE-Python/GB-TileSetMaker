@@ -34,8 +34,8 @@ real_filepath = command_args.output_filepath
 Image_Chosen = command_args.input_file
 output_name = command_args.output_name
 
-D_GREY = command_args.dark_grey
-L_GREY = command_args.light_grey
+D_GREY = int(command_args.dark_grey)
+L_GREY = int(command_args.light_grey)
 BLACK = 0
 WHITE = 255
 
@@ -43,8 +43,6 @@ def main():
     base_image_alpha = np.array(Image.open(Image_Chosen))
 
     original_image_copy = base_image_alpha
-
-    print(base_image_alpha.ndim, base_image_alpha.shape)
 
     # make transparencies white if alpha exists
     if (base_image_alpha.ndim ==3):
@@ -287,7 +285,22 @@ def tileset_to_c(greyimage_pixHexValues, tileset_string):
     c_file = open(real_filepath+'/'+file_name+'.c', "w")
     c_file.write(c_file_format(greyimage_pixHexValues, tileset_string, file_name))
 
-if (L_GREY < D_GREY or L_GREY > WHITE or D_GREY < BLACK or L_GREY < BLACK or D_GREY > WHITE):
-    print("Error: Invalid Greys")
-else:
+errorFlag_1 = False
+
+if (L_GREY <= D_GREY):
+    print ("Error: Light Grey less than Dark Grey")
+    errorFlag_1 = True
+if (L_GREY >= WHITE):
+    print ("Error: Light Grey bigger than White")
+    errorFlag_1 = True
+if(D_GREY <= BLACK):
+    print("Error: Dark Grey less than Black")
+    errorFlag_1 = True
+if(L_GREY <= BLACK):
+    print("Error: Light Grey less than Black")
+    errorFlag_1 = True
+if(D_GREY >= WHITE):
+    print("Error: Dark Grey bigger than White")
+    errorFlag_1 = True
+if(not errorFlag_1):
     main()
