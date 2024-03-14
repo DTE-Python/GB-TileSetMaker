@@ -21,4 +21,4 @@ Short for "Light Grey." Set a custom value for your light grey colors, between 0
 I'm not too savvy with GitHub or really Python in general, but this tool works for me, so I'm happy.
 
 <h3>Planned:</h3>
-I'm hoping to make this tool compatible with GIMP and also with LibreSprite in the future, if I can figure out how to make plugins for either of them.
+Plugin for LibreSprite working, GIMP not figured out yet.
